@@ -1,0 +1,35 @@
+name: Build and publish
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'latest'
+jobs:
+  check-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set variables
+        run: |
+          echo "VERSION=`cat latest`" >> $GITHUB_ENV
+          echo "ARCH=x86_64-unknown-linux-musl" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PUSH_TOKEN }}
+      - name: Fetch release version
+        run: |
+          curl -sL https://api.github.com/repos/geph-official/geph4/tarball/refs/tags/${{ env.VERSION }} | \
+          tar xvz -
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ env.ARCH }}
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: '--release --locked --target ${{ env.ARCH }} --manifest-path=geph-official-geph4-*/Cargo.toml'
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.VERSION }}
+          path: target/x86_64-unknown-linux-musl/release/geph4-client
