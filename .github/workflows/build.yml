@@ -7,13 +7,14 @@ on:
 jobs:
   build-x86_64:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ARCH: [ x86_64-unknown-linux-musl, aarch64-unknown-linux-musl]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set variables
-        run: |
-          echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
-          echo "ARCH=x86_64-unknown-linux-musl" >> $GITHUB_ENV
+        run: echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
       - name: Download upstream code
         run: curl -sL https://api.github.com/repos/geph-official/geph4/tarball/refs/tags/${{ env.VERSION }} | tar xvz
       - name: Get source folder
@@ -24,21 +25,21 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          target: ${{ env.ARCH }}
+          target: ${{ matrix.ARCH }}
           override: true
       - name: Cross compile
         uses: actions-rs/cargo@v1
         with:
           use-cross: true
           command: build
-          args: '--release --locked --target ${{ env.ARCH }} --manifest-path=${{ env.GEPH }}/Cargo.toml'
+          args: '--release --locked --target ${{ matrix.ARCH }} --manifest-path=${{ env.GEPH }}/Cargo.toml'
         env:
           CC: clang
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: geph4-client-x86_64
-          path: target/x86_64-unknown-linux-musl/release/geph4-client
+          name: geph4-client-${{ matrix.ARCH }}
+          path: target/${{ matrix.ARCH }}/release/geph4-client
   release:
     runs-on: ubuntu-latest
     if: always()
@@ -50,11 +51,8 @@ jobs:
         run: echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
       - name: Download artifact
         uses: actions/download-artifact@v2
-        with:
-          name: geph4-client-x86_64
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ env.VERSION }}
-          files: |
-            geph4-client-*
+          files: geph4-client-*/geph4-client-*
