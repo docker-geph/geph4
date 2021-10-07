@@ -16,6 +16,10 @@ jobs:
           echo "ARCH=x86_64-unknown-linux-musl" >> $GITHUB_ENV
       - name: Download upstream code
         run: curl -sL https://api.github.com/repos/geph-official/geph4/tarball/refs/tags/${{ env.VERSION }} | tar xvz
+      - name: Patch upstream code
+        run: |
+          echo "GEPH=`ls | grep geph-official-geph4-`" >> $GITHUB_ENV
+          git apply --directory=${{ env.GEPH }} .github/cross.patch
       - name: Download rust toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -27,7 +31,7 @@ jobs:
         with:
           use-cross: true
           command: build
-          args: '--release --locked --target ${{ env.ARCH }} --manifest-path=`ls | grep geph-official-geph4-`/Cargo.toml'
+          args: '--release --locked --target ${{ env.ARCH }} --manifest-path=${{ env.GEPH }}/Cargo.toml'
         env:
           CC: clang
       - name: Publish artifact
