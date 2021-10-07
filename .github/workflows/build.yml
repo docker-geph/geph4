@@ -5,11 +5,11 @@ on:
     paths:
       - '.github/latest'
 jobs:
-  build-x86_64:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ARCH: [ x86_64-unknown-linux-musl, aarch64-unknown-linux-musl]
+        ARCH: [ x86_64-unknown-linux-musl, aarch64-unknown-linux-musl, mips-unknown-linux-musl, mipsel-unknown-linux-musl, x86_64-pc-windows-gnu ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -39,11 +39,11 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: geph4-client-${{ matrix.ARCH }}
-          path: target/${{ matrix.ARCH }}/release/geph4-client
+          path: ${{ env.GEPH }}/target/${{ matrix.ARCH }}/release/geph4-client
   release:
     runs-on: ubuntu-latest
     if: always()
-    needs: [build-x86_64]
+    needs: [ build ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
