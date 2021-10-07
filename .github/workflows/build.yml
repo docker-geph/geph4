@@ -5,7 +5,7 @@ on:
     paths:
       - '.github/latest'
 jobs:
-  check-release:
+  build-x86_64:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -34,8 +34,27 @@ jobs:
           args: '--release --locked --target ${{ env.ARCH }} --manifest-path=${{ env.GEPH }}/Cargo.toml'
         env:
           CC: clang
-      - name: Publish artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.VERSION }}
+          name: geph4-client-x86_64
           path: target/x86_64-unknown-linux-musl/release/geph4-client
+  release:
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [build-x86_64]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set variables
+        run: echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: geph4-client-x86_64
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ env.VERSION }}
+          files: |
+            geph4-client-x86_64
