@@ -21,6 +21,7 @@ jobs:
       - name: Get source folder
         run: echo "GEPH=`ls | grep geph-official-geph4-`" >> $GITHUB_ENV
       - name: Patch upstream code
+        if: ${{ matrix.ARCH }} == 'x86_64-unknown-linux-musl'
         run: git apply --directory=${{ env.GEPH }} .github/cross.patch
       - name: Download rust toolchain
         uses: actions-rs/toolchain@v1
