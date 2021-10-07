@@ -20,12 +20,7 @@ jobs:
       - name: Cross compile
         uses: docker://messense/rust-musl-cross:aarch64-musl
         with:
-          args: |
-            cargo
-            build
-            --release
-            --locked
-            --manifest-path=/github/workspace/${{ env.GEPH }}/Cargo.toml
+          args: 'cargo build --release --locked --manifest-path=/github/workspace/${{ env.GEPH }}/Cargo.toml'
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
