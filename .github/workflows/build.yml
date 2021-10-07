@@ -11,8 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set variables
-        run: |
-          echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
+        run: echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
       - name: Download upstream code
         run: curl -sL https://api.github.com/repos/geph-official/geph4/tarball/refs/tags/${{ env.VERSION }} | tar xvz
       - name: Get source folder
@@ -25,11 +24,55 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: geph4-client-aarch64
-          path: ${{ env.GEPH }}/target/release/geph4-client
-  release:
+          path: ${{ env.GEPH }}/target/aarch64-unknown-linux-musl/release/geph4-client
+  build-x86-64:
     runs-on: ubuntu-latest
     if: always()
     needs: [ build-aarch64 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set variables
+        run: echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
+      - name: Download upstream code
+        run: curl -sL https://api.github.com/repos/geph-official/geph4/tarball/refs/tags/${{ env.VERSION }} | tar xvz
+      - name: Get source folder
+        run: echo "GEPH=`ls | grep geph-official-geph4-`" >> $GITHUB_ENV
+      - name: Cross compile
+        uses: docker://messense/rust-musl-cross:x86-64-musl
+        with:
+          args: 'cargo build --release --locked --manifest-path=/github/workspace/${{ env.GEPH }}/Cargo.toml'
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: geph4-client-x86-64
+          path: ${{ env.GEPH }}/target/x86-64-unknown-linux-musl/release/geph4-client
+  build-mips:
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [ build-x86-64 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set variables
+        run: echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
+      - name: Download upstream code
+        run: curl -sL https://api.github.com/repos/geph-official/geph4/tarball/refs/tags/${{ env.VERSION }} | tar xvz
+      - name: Get source folder
+        run: echo "GEPH=`ls | grep geph-official-geph4-`" >> $GITHUB_ENV
+      - name: Cross compile
+        uses: docker://messense/rust-musl-cross:mips-musl
+        with:
+          args: 'cargo build --release --locked --manifest-path=/github/workspace/${{ env.GEPH }}/Cargo.toml'
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: geph4-client-mips
+          path: ${{ env.GEPH }}/target/mips-unknown-linux-musl/release/geph4-client
+  release:
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [ build-mips ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
