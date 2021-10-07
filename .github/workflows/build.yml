@@ -57,4 +57,4 @@ jobs:
         with:
           name: ${{ env.VERSION }}
           files: |
-            geph4-client-x86_64
+            geph4-client-*
