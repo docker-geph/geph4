@@ -1,0 +1,11 @@
+diff --git a/Cross.toml b/Cross.toml
+index 7c44659..b6895d3 100644
+--- a/Cross.toml
++++ b/Cross.toml
+@@ -4,4 +4,8 @@ image = "rustembedded/cross:i686-pc-windows-gnu"
+ [build.env]
+ passthrough = [
+     "CARGO_TARGET_DIR",
++    "CC",
+ ]
+\ No newline at end of file
