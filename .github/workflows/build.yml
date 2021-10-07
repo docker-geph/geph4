@@ -16,17 +16,20 @@ jobs:
           echo "ARCH=x86_64-unknown-linux-musl" >> $GITHUB_ENV
       - name: Fetch release version
         run: curl -sL https://api.github.com/repos/geph-official/geph4/tarball/refs/tags/${{ env.VERSION }} | tar xvz
-      - uses: actions-rs/toolchain@v1
+      - name: Download rust toolchain
+        uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           target: ${{ env.ARCH }}
           override: true
-      - uses: actions-rs/cargo@v1
+      - name: Cross compile
+        uses: actions-rs/cargo@v1
         with:
           use-cross: true
           command: build
-          args: '--release --locked --target ${{ env.ARCH }} --manifest-path=geph-official-geph4-*/Cargo.toml'
-      - uses: actions/upload-artifact@v2
+          args: '--release --locked --target ${{ env.ARCH }} --manifest-path=`ls geph-official-geph4-*`/Cargo.toml'
+      - name: Publish artifact
+        uses: actions/upload-artifact@v2
         with:
           name: ${{ env.VERSION }}
           path: target/x86_64-unknown-linux-musl/release/geph4-client
