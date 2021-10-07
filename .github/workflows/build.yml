@@ -25,7 +25,7 @@ jobs:
         with:
           name: geph4-client-aarch64
           path: ${{ env.GEPH }}/target/aarch64-unknown-linux-musl/release/geph4-client
-  build-x86-64:
+  build-x86_64:
     runs-on: ubuntu-latest
     if: always()
     needs: [ build-aarch64 ]
@@ -39,18 +39,18 @@ jobs:
       - name: Get source folder
         run: echo "GEPH=`ls | grep geph-official-geph4-`" >> $GITHUB_ENV
       - name: Cross compile
-        uses: docker://messense/rust-musl-cross:x86-64-musl
+        uses: docker://messense/rust-musl-cross:x86_64-musl
         with:
           args: 'cargo build --release --locked --manifest-path=/github/workspace/${{ env.GEPH }}/Cargo.toml'
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: geph4-client-x86-64
-          path: ${{ env.GEPH }}/target/x86-64-unknown-linux-musl/release/geph4-client
+          name: geph4-client-x86_64
+          path: ${{ env.GEPH }}/target/x86_64-unknown-linux-musl/release/geph4-client
   build-mips:
     runs-on: ubuntu-latest
     if: always()
-    needs: [ build-x86-64 ]
+    needs: [ build-x86_64 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
