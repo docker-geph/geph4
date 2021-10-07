@@ -19,6 +19,8 @@ jobs:
       - name: Patch upstream code
         run: |
           echo "GEPH=`ls | grep geph-official-geph4-`" >> $GITHUB_ENV
+          echo ${{ env.GEPH }}
+          ls ${{ env.GEPH }}
           git apply --directory=${{ env.GEPH }} .github/cross.patch
       - name: Download rust toolchain
         uses: actions-rs/toolchain@v1
