@@ -5,12 +5,8 @@ on:
     paths:
       - '.github/latest'
 jobs:
-  build:
+  build-aarch64:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 1
-      matrix:
-        ARCH: [ aarch64-musl, x86_64-musl ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -22,7 +18,7 @@ jobs:
       - name: Get source folder
         run: echo "GEPH=`ls | grep geph-official-geph4-`" >> $GITHUB_ENV
       - name: Cross compile
-        uses: docker://messense/rust-musl-cross:${{ matrix.ARCH }}
+        uses: docker://messense/rust-musl-cross:aarch64-musl
         with:
           args: |
             cargo
@@ -33,7 +29,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: geph4-client-${{ matrix.ARCH }}
+          name: geph4-client-aarch64
           path: ${{ env.GEPH }}/target/release/geph4-client
   release:
     runs-on: ubuntu-latest
