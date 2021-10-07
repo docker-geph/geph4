@@ -15,7 +15,7 @@ jobs:
           echo "VERSION=`cat latest`" >> $GITHUB_ENV
           echo "ARCH=x86_64-unknown-linux-musl" >> $GITHUB_ENV
       - name: Fetch release version
-        run: curl -sL https://api.github.com/repos/geph-official/geph4/tarball/refs/tags/${{ env.VERSION }} | tar xvz -
+        run: curl -sL https://api.github.com/repos/geph-official/geph4/tarball/refs/tags/${{ env.VERSION }} | tar xvz
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
