@@ -10,38 +10,31 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        ARCH: [ x86_64-pc-windows-gnu ]
+        ARCH: [ aarch64-musl, x86_64-musl ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set variables
-        run: echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
+        run: |
+          echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
       - name: Download upstream code
         run: curl -sL https://api.github.com/repos/geph-official/geph4/tarball/refs/tags/${{ env.VERSION }} | tar xvz
       - name: Get source folder
         run: echo "GEPH=`ls | grep geph-official-geph4-`" >> $GITHUB_ENV
-      - name: Patch upstream code
-        if: matrix.ARCH == 'x86_64-unknown-linux-musl'
-        run: git apply --directory=${{ env.GEPH }} .github/cross.patch
-      - name: Download rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: ${{ matrix.ARCH }}
-          override: true
       - name: Cross compile
-        uses: actions-rs/cargo@v1
+        uses: docker://messense/rust-musl-cross:${{ matrix.ARCH }}
         with:
-          use-cross: true
-          command: build
-          args: '--release --locked --target ${{ matrix.ARCH }} --manifest-path=${{ env.GEPH }}/Cargo.toml'
-        env:
-          CC: clang
+          args: |
+            cargo
+            build
+            --release
+            --locked
+            --manifest-path=/github/workspace/${{ env.GEPH }}/Cargo.toml
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: geph4-client-${{ matrix.ARCH }}
-          path: ${{ env.GEPH }}/target/${{ matrix.ARCH }}/release/geph4-client
+          path: ${{ env.GEPH }}/target/release/geph4-client
   release:
     runs-on: ubuntu-latest
     if: always()
