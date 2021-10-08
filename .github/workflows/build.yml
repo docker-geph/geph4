@@ -58,10 +58,15 @@ jobs:
         run: echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
       - name: Download artifact
         uses: actions/download-artifact@v2
+      - run: |
+          echo $(pwd)
+          ls
+          ls /home/runner/work/geph4/geph4/geph4-client-aarch64
+          ls /home/runner/work/geph4/geph4/geph4-client-x86_64
       - name: Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "geph4-client-*/geph4-client-*"
+          artifacts: "geph4-client-aarch64/geph4-client-aarch64,geph4-client-x86_64/geph4-client-x86_64"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.VERSION }}
           commit: main
