@@ -61,7 +61,7 @@ jobs:
       - name: Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "geph4-client-*/geph4-client"
+          artifacts: "geph4-client-*/geph4-client-*"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.VERSION }}
           commit: main
