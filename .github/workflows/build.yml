@@ -58,10 +58,15 @@ jobs:
         run: echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
       - name: Download artifact
         uses: actions/download-artifact@v2
+      - name: Rename artifact
+        run: |
+          mkdir release
+          mv geph4-client-aarch64/geph4-client release/geph4-client-aarch64
+          mv geph4-client-x86_64/geph4-client release/geph4-client-x86_64
       - name: Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: 'geph4-client-*/geph4-client'
+          artifacts: 'release/*'
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.VERSION }}
           commit: main
