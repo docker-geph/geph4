@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   schedule:
     # Check every hour
-    - cron:  '0 * * * *'
+    - cron:  '0 0 * * *'
 jobs:
   check-release:
     runs-on: ubuntu-latest
