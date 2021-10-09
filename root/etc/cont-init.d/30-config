@@ -1,0 +1,23 @@
+#!/usr/bin/with-contenv bash
+
+# make our folders
+mkdir -p \
+    /var/cache/geph4/
+
+# copy default config if not present in /config
+[[ ! -e /config/geph4.conf ]] && \
+    cp /default/geph4.conf /config
+
+# copy config from /config to root
+cp /config/geph4.conf /geph4.conf
+
+# permissions
+chown -R abc:abc \
+    /config \
+    /var/cache/geph4 \
+    /geph4.conf
+
+chmod 700 /config
+chmod 600 \
+    /config/* \
+    /geph4.conf
