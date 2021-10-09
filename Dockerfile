@@ -14,6 +14,7 @@ RUN \
  apk add --no-cache \
   inotify-tools && \
  echo "**** install geph4 ****" && \
+ echo "https://github.com/docker-geph/geph4/releases/download/${VERSION}/geph4-client-${TARGETARCH}" && \
  mkdir -p \
   /tmp/geph4 && \
  curl -o \
