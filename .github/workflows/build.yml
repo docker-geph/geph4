@@ -67,6 +67,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: 'release/*'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PUSH_TOKEN }}
           tag: ${{ env.VERSION }}
           commit: main
