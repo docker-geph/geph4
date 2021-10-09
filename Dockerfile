@@ -3,6 +3,7 @@ FROM ghcr.io/linuxserver/baseimage-alpine:3.12
 # set version label
 ARG BUILD_DATE
 ARG VERSION
+ARG TARGETARCH
 LABEL build_version="geph4 version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="docker-geph"
 
