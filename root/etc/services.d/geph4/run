@@ -2,7 +2,9 @@
 
 if [ -f /geph4.conf ]
 then
-  export $(cat /geph4.conf | sed 's/#.*//g' | xargs)
+  set -a                                            
+  . ./geph4.conf                                    
+  set +a
 else
   >&2 echo "geph4.conf is missing."
   exit 1
