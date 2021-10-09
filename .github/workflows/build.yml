@@ -62,7 +62,7 @@ jobs:
         run: |
           mkdir release
           mv geph4-client-amd64/geph4-client release/geph4-client-amd64
-          mv geph4-client-amd64/geph4-client release/geph4-client-arm64
+          mv geph4-client-arm64/geph4-client release/geph4-client-arm64
       - name: Release
         uses: ncipollo/release-action@v1
         with:
