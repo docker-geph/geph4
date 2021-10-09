@@ -1,0 +1,12 @@
+#!/usr/bin/with-contenv bash
+
+if [ -f /geph4.conf ]
+then
+  export $(cat /geph4.conf | sed 's/#.*//g' | xargs)
+else
+  >&2 echo "geph4.conf is missing."
+  exit 1
+fi
+
+exec \
+	s6-setuidgid abc /usr/bin/geph4-client $SUBCOMMAND $FLAGS $OPTIONS --credential-cache /var/cache/geph4/ --password $PASSWORD --username $USERNAME
