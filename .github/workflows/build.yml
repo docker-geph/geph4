@@ -5,7 +5,7 @@ on:
     paths:
       - '.github/latest'
 jobs:
-  build-aarch64:
+  build-arm64:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,12 +23,12 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: geph4-client-aarch64
+          name: geph4-client-arm64
           path: ${{ env.GEPH }}/target/aarch64-unknown-linux-musl/release/geph4-client
-  build-x86_64:
+  build-amd64:
     runs-on: ubuntu-latest
     if: always()
-    needs: [ build-aarch64 ]
+    needs: [ build-arm64 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -45,12 +45,12 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: geph4-client-x86_64
+          name: geph4-client-amd64
           path: ${{ env.GEPH }}/target/x86_64-unknown-linux-musl/release/geph4-client
   release:
     runs-on: ubuntu-latest
     if: always()
-    needs: [ build-x86_64 ]
+    needs: [ build-amd64 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -61,8 +61,8 @@ jobs:
       - name: Rename artifact
         run: |
           mkdir release
-          mv geph4-client-aarch64/geph4-client release/geph4-client-amd64
-          mv geph4-client-x86_64/geph4-client release/geph4-client-arm64
+          mv geph4-client-amd64/geph4-client release/geph4-client-amd64
+          mv geph4-client-amd64/geph4-client release/geph4-client-arm64
       - name: Release
         uses: ncipollo/release-action@v1
         with:
