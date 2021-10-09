@@ -9,4 +9,4 @@ else
 fi
 
 exec \
-	s6-setuidgid abc /usr/bin/geph4-client $SUBCOMMAND $FLAGS $OPTIONS --credential-cache /var/cache/geph4/ --password $PASSWORD --username $USERNAME
+  s6-setuidgid abc /usr/bin/geph4-client $SUBCOMMAND $FLAGS $OPTIONS --credential-cache /var/cache/geph4/ --password $PASSWORD --username $USERNAME
