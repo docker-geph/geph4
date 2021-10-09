@@ -12,7 +12,6 @@ RUN \
   curl && \
  echo "**** install runtime packages ****" && \
  apk add --no-cache \
-  bind-tools \
   inotify-tools && \
  echo "**** install geph4 ****" && \
  mkdir -p \
