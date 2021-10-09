@@ -12,7 +12,7 @@ RUN \
 	/tmp/geph4 && \
  curl -o \
  /tmp/geph4-client -L \
-	"https://github.com/docker-geph/geph4/releases/download/${VERSION}/geph4-client-x86_64" && \
+	"https://github.com/docker-geph/geph4/releases/download/${VERSION}/geph4-client-${TARGETARCH}" && \
  install -Dm755 /tmp/geph4-client /usr/bin/ && \
  echo "**** cleanup ****" && \
  rm -rf \
