@@ -12,8 +12,13 @@ jobs:
         uses: actions/checkout@v2
       - name: Set variables
         run: |
-          echo "VERSION=`cat .github/latest`" >> $GITHUB_ENV
-          echo "DATE=`date -I`" >> $GITHUB_ENV
+          echo "VERSION=$(cat .github/latest)" >> $GITHUB_ENV
+          echo "DATE=$(date -I)" >> $GITHUB_ENV
+          if [[ $(cat .github/latest) =~ "alpha" || $(cat .github/latest) =~ "beta" ]]; then
+            echo "TAGS=dockergeph/geph4:$(cat .github/latest)" >> $GITHUB_ENV
+          else
+            echo "TAGS=dockergeph/geph4:$(cat .github/latest),dockergeph/geph4:latest" >> $GITHUB_ENV
+          fi
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -30,7 +35,7 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: dockergeph/geph4:${{ env.VERSION }}
+          tags: ${{ env.TAGS }}
           build-args: |
             VERSION=${{ env.VERSION }}
             BUILD_DATE=${{ env.DATE }}
