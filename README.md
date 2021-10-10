@@ -11,13 +11,13 @@ services:
     environment:
       - TZ=Etc/UTC
     volumes:
-      - ./geph4.conf:/config/geph4.conf:ro
+      - ./geph4.conf:/config/geph4.conf
     ports:
       - 9909:9909
     restart: unless-stopped
 ```
 
-[Sample config file](https://aur.archlinux.org/cgit/aur.git/tree/geph4-client.default?h=geph4-client) for docker deployment. Options listed under `geph4-vpn-helper` are unused in this package.
+[Sample config file](https://github.com/docker-geph/geph4/blob/main/root/default/geph4.conf) for docker deployment, which will be copied to location specified in `volumes` if missing. Options listed under `geph4-vpn-helper` are unused in this package.
 
 For self hosted geph4-exit, you can specify your domain name in the following way: `OPTIONS="--override-connect PUBLIC_KEY@$(dig +short your.domain.com):PORT"`
 
