@@ -11,7 +11,7 @@ services:
     environment:
       - TZ=Etc/UTC
     volumes:
-      - ./geph4.conf:/config/geph4.conf
+      - ./geph4:/config
     ports:
       - 9909:9909
     restart: unless-stopped
