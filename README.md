@@ -21,7 +21,7 @@ services:
 
 For self hosted geph4-exit, you can specify your domain name in the following way: `OPTIONS="--override-connect PUBLIC_KEY@$(dig +short your.domain.com):PORT"`
 
-# Advanced usage
+# Advanced tutorial
 [Transparent proxy on OpenWrt](https://github.com/docker-geph/get-started/wiki/Transparent-proxy-on-OpenWrt)
 
 # Credit
