@@ -5,6 +5,6 @@ while inotifywait -e modify /config/geph4.conf; do
 	cp /config/geph4.conf /geph4.conf
 	chown abc:abc /geph4.conf
 	chmod 600 /geph4.conf
-	s6-svc -h /var/run/s6/services/geph4
+	s6-svc -r /var/run/s6/services/geph4
 	echo "geph4 has been restarted"
 done
