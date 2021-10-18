@@ -14,6 +14,9 @@ services:
       - ./geph4:/config
     ports:
       - 9909:9909
+    network_mode: bridge # Optional
+                         # This will cause docker-compose to use docker's default network,
+                         # which has already been configure in OpenWrt.
     restart: unless-stopped
 ```
 
